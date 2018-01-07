@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import pygame
+from pygame.sprite import Group
 
 from settings import Settings
 from ship import Ship
@@ -17,11 +18,15 @@ def run_game():
     pygame.display.set_caption(ai_settings.caption)
     
     # make the guardian of the invaders
-    ship = Ship(screen=screen,  ship_image=ai_settings.ship_image)
+    ship = Ship(ai_settings=ai_settings,  screen=screen)
+    
+    #create a bullet group
+    bullets = Group()
     
     while True:
-        gf.check_events(ship=ship)
+        gf.check_events(ai_settings=ai_settings, screen=screen, ship=ship,  bullets=bullets)
         ship.update()
-        gf.update_screen(ai_settings=ai_settings,  screen=screen,  ship=ship)
+        bullets.update()
+        gf.update_screen(ai_settings=ai_settings,  screen=screen,  ship=ship,  bullets=bullets)
 
 run_game()
