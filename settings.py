@@ -10,3 +10,4 @@ class Settings():
         self.screen_height = 800
         self.bg_color = (230,  230,  230)
         self.caption = "Amedeo version of Space Invaders"
+        self.ship_image = 'images/ship.bmp'
