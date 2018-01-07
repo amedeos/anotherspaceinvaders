@@ -10,7 +10,7 @@ class Settings():
         self.screen_height = 800
         self.bg_color = (230,  230,  230)
         self.caption = "Amedeo version of Space Invaders"
-        self.ship_image = 'images/ship.bmp'
+        self.ship_image = 'images/rocket.bmp'
         self.ship_speed_factor = 1.5
         # bullet settings
         self.bullet_speed_factor = 1
