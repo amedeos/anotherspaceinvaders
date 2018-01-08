@@ -9,7 +9,7 @@ class Ship():
         """Initialize the ship and set its starting position."""
         self.screen = screen
         self.ai_settings = ai_settings
-        self.image = pygame.image.load(ai_settings.ship_image)
+        self.image = pygame.image.load(self.ai_settings.ship_image)
         self.rect = self.image.get_rect()
         # need to know the screen rectange dimension
         self.screen_rect = screen.get_rect()

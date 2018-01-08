@@ -4,6 +4,7 @@ from pygame.sprite import Group
 
 from settings import Settings
 from ship import Ship
+#from invader import Invader
 import game_functions as gf
 
 def run_game():
@@ -20,6 +21,10 @@ def run_game():
     # make the guardian of the invaders
     ship = Ship(ai_settings=ai_settings,  screen=screen)
     
+    # make the enemy
+    invaders = Group()
+    gf.create_fleet(ai_settings=ai_settings,  screen=screen,  invaders=invaders)
+    
     #create a bullet group
     bullets = Group()
     
@@ -27,6 +32,6 @@ def run_game():
         gf.check_events(ai_settings=ai_settings, screen=screen, ship=ship,  bullets=bullets)
         ship.update()
         gf.update_bullets(bullets=bullets)
-        gf.update_screen(ai_settings=ai_settings,  screen=screen,  ship=ship,  bullets=bullets)
+        gf.update_screen(ai_settings=ai_settings,  screen=screen,  ship=ship, invaders=invaders,  bullets=bullets)
 
 run_game()

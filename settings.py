@@ -20,3 +20,5 @@ class Settings():
         self.bullet_height = 15
         self.bullet_color = 0, 255, 43
         self.bullet_allowed = 3
+        # invader settings
+        self.invader_image = 'images/invader.bmp'

@@ -2,6 +2,7 @@ import sys
 import pygame
 
 from bullet import Bullet
+from invader import Invader
 
 def check_keydown_events(event, ai_settings, screen, ship,  bullets):
     """Respond to keydown event"""
@@ -35,7 +36,7 @@ def check_events(ai_settings,  screen, ship,  bullets):
         elif event.type == pygame.KEYUP:
             check_keyup_events(event,  ship)
 
-def update_screen(ai_settings,  screen,  ship,  bullets):
+def update_screen(ai_settings,  screen,  ship, invaders, bullets):
     """
     Update images on the screen and flip to the new screen
     """
@@ -44,6 +45,7 @@ def update_screen(ai_settings,  screen,  ship,  bullets):
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     ship.blitme()
+    invaders.draw(screen)
     
     pygame.display.flip()
 
@@ -61,3 +63,16 @@ def fire_bullet(ai_settings,  screen,  ship,  bullets):
     if len(bullets) < ai_settings.bullet_allowed:
         new_bullet = Bullet(ai_settings=ai_settings,  screen=screen,  ship=ship)
         bullets.add(new_bullet)
+
+def create_fleet(ai_settings,  screen,  invaders):
+    """Create a fleet of invaders"""
+    invader = Invader(ai_settings,  screen)
+    invader_width = invader.rect.width
+    available_space_x = ai_settings.screen_width - 2 * invader_width
+    number_invaders_x = int( available_space_x / ( 2 * invader_width ) )
+    
+    for invader_number in range(number_invaders_x):
+        invader = Invader(ai_settings,  screen)
+        invader.x = invader_width +2 * invader_width * invader_number
+        invader.rect.x = invader.x
+        invaders.add(invader)
