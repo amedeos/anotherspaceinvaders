@@ -64,15 +64,33 @@ def fire_bullet(ai_settings,  screen,  ship,  bullets):
         new_bullet = Bullet(ai_settings=ai_settings,  screen=screen,  ship=ship)
         bullets.add(new_bullet)
 
-def create_fleet(ai_settings,  screen,  invaders):
-    """Create a fleet of invaders"""
-    invader = Invader(ai_settings,  screen)
-    invader_width = invader.rect.width
+def get_number_invaders_x(ai_settings,  invader_width):
+    """Calculate the number of invaders in a row"""
     available_space_x = ai_settings.screen_width - 2 * invader_width
     number_invaders_x = int( available_space_x / ( 2 * invader_width ) )
+    return number_invaders_x
+
+def create_invader(ai_settings,  screen,  invaders,  invader_number,  row_number):
+    """Create an invader"""
+    invader = Invader(ai_settings=ai_settings,  screen=screen)
+    invader_width = invader.rect.width
+    invader.x = invader_width + 2 * invader_width * invader_number
+    invader.rect.x = invader.x
+    invader.rect.y = invader.rect.height + 2 * invader.rect.height * row_number
+    invaders.add(invader)
+
+def create_fleet(ai_settings,  screen,  ship,  invaders):
+    """Create a fleet of invaders"""
+    invader = Invader(ai_settings,  screen)
+    number_invaders_x = get_number_invaders_x(ai_settings,  invader.rect.width)
+    number_rows = get_number_rows(ai_settings=ai_settings,  ship_height=ship.rect.height,  invader_height=invader.rect.height)
     
-    for invader_number in range(number_invaders_x):
-        invader = Invader(ai_settings,  screen)
-        invader.x = invader_width +2 * invader_width * invader_number
-        invader.rect.x = invader.x
-        invaders.add(invader)
+    for row_number in range(number_rows):
+        for invader_number in range(number_invaders_x):
+            create_invader(ai_settings=ai_settings,  screen=screen,  invaders=invaders,  invader_number=invader_number,  row_number=row_number)
+
+def get_number_rows(ai_settings,  ship_height,  invader_height):
+    """Calculate the number of rows of invaders"""
+    available_space_y = (ai_settings.screen_height - (4 * invader_height) - ship_height )
+    number_rows = int( available_space_y / (2 * invader_height) )
+    return number_rows

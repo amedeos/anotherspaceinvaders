@@ -23,7 +23,7 @@ def run_game():
     
     # make the enemy
     invaders = Group()
-    gf.create_fleet(ai_settings=ai_settings,  screen=screen,  invaders=invaders)
+    gf.create_fleet(ai_settings=ai_settings,  screen=screen, ship=ship,  invaders=invaders)
     
     #create a bullet group
     bullets = Group()

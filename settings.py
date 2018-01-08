@@ -22,3 +22,4 @@ class Settings():
         self.bullet_allowed = 3
         # invader settings
         self.invader_image = 'images/invader.bmp'
+        self.invader_speed_factor = 1
