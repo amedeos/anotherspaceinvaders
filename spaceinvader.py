@@ -31,7 +31,8 @@ def run_game():
     while True:
         gf.check_events(ai_settings=ai_settings, screen=screen, ship=ship,  bullets=bullets)
         ship.update()
-        gf.update_bullets(bullets=bullets)
+        gf.update_bullets(ai_settings=ai_settings,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
+        gf.update_invaders(ai_settings=ai_settings, ship=ship, invaders=invaders)
         gf.update_screen(ai_settings=ai_settings,  screen=screen,  ship=ship, invaders=invaders,  bullets=bullets)
 
 run_game()

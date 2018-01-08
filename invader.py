@@ -24,3 +24,17 @@ class Invader(Sprite):
     def blitme(self):
         """Draw the invader"""
         self.screen.blit(self.image,  self.rect)
+    
+    def update(self):
+        """Move the invader right"""
+        self.x += ( self.ai_settings.invader_speed_factor * self.ai_settings.fleet_direction)
+        self.rect.x = self.x
+    
+    def check_edges(self):
+        """Return true if invader is on the edge"""
+        screen_rect = self.screen.get_rect()
+        if self.rect.right >= screen_rect.right:
+            return True
+        elif self.rect.left <= 0:
+            return True
+    
