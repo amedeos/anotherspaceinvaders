@@ -35,13 +35,15 @@ def run_game():
     play_button = Button(ai_settings,  screen,  "Play")
     
     while True:
-        gf.check_events(ai_settings=ai_settings, screen=screen, stats=stats,  play_button=play_button,  ship=ship,  bullets=bullets)
+        gf.check_events(ai_settings=ai_settings, screen=screen, stats=stats,  play_button=play_button,  
+                            ship=ship, invaders=invaders,  bullets=bullets)
         
         if stats.game_active:
             ship.update()
             gf.update_bullets(ai_settings=ai_settings,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
             gf.update_invaders(ai_settings=ai_settings, stats=stats, screen=screen,  ship=ship, invaders=invaders,  bullets=bullets)
         
-        gf.update_screen(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship, invaders=invaders,  bullets=bullets,  play_button=play_button)
+        gf.update_screen(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship, 
+                    invaders=invaders,  bullets=bullets,  play_button=play_button)
 
 run_game()

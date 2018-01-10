@@ -29,4 +29,4 @@ class Settings():
         self.fleet_drop_speed = 10
         # 1 -> right ; -1 -> left
         self.fleet_direction = 1
-        self.sleep_second = 5
+        self.sleep_second = 1
