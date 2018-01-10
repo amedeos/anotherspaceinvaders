@@ -3,8 +3,9 @@ import pygame
 from pygame.sprite import Group
 
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
-#from invader import Invader
+from button import Button
 import game_functions as gf
 
 def run_game():
@@ -18,6 +19,9 @@ def run_game():
                     ai_settings.screen_height))
     pygame.display.set_caption(ai_settings.caption)
     
+    # game statistics
+    stats = GameStats(ai_settings=ai_settings)
+    
     # make the guardian of the invaders
     ship = Ship(ai_settings=ai_settings,  screen=screen)
     
@@ -28,11 +32,16 @@ def run_game():
     #create a bullet group
     bullets = Group()
     
+    play_button = Button(ai_settings,  screen,  "Play")
+    
     while True:
-        gf.check_events(ai_settings=ai_settings, screen=screen, ship=ship,  bullets=bullets)
-        ship.update()
-        gf.update_bullets(ai_settings=ai_settings,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
-        gf.update_invaders(ai_settings=ai_settings, ship=ship, invaders=invaders)
-        gf.update_screen(ai_settings=ai_settings,  screen=screen,  ship=ship, invaders=invaders,  bullets=bullets)
+        gf.check_events(ai_settings=ai_settings, screen=screen, stats=stats,  play_button=play_button,  ship=ship,  bullets=bullets)
+        
+        if stats.game_active:
+            ship.update()
+            gf.update_bullets(ai_settings=ai_settings,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
+            gf.update_invaders(ai_settings=ai_settings, stats=stats, screen=screen,  ship=ship, invaders=invaders,  bullets=bullets)
+        
+        gf.update_screen(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship, invaders=invaders,  bullets=bullets,  play_button=play_button)
 
 run_game()

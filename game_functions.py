@@ -1,5 +1,6 @@
 import sys
 import pygame
+from time import sleep
 
 from bullet import Bullet
 from invader import Invader
@@ -30,7 +31,7 @@ def check_keyup_events(event,  ship):
         # stop moving to the left
         ship.moving_left = False
 
-def check_events(ai_settings,  screen, ship,  bullets):
+def check_events(ai_settings,  screen, stats,  play_button,  ship,  bullets):
     """Respond to keyboard and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -39,8 +40,16 @@ def check_events(ai_settings,  screen, ship,  bullets):
             check_keydown_events(event=event, ai_settings=ai_settings,  screen=screen, ship=ship,  bullets=bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event,  ship)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x,  mouse_y = pygame.mouse.get_pos()
+            check_play_button(stats=stats,  play_button=play_button,  mouse_x=mouse_x,  mouse_y=mouse_y)
 
-def update_screen(ai_settings,  screen,  ship, invaders, bullets):
+def check_play_button(stats,  play_button,  mouse_x,  mouse_y):
+    """Start a new game"""
+    if play_button.rect.collidepoint(mouse_x,  mouse_y):
+        stats.game_active = True
+
+def update_screen(ai_settings,  screen,  stats,  ship, invaders, bullets,  play_button):
     """
     Update images on the screen and flip to the new screen
     """
@@ -50,6 +59,9 @@ def update_screen(ai_settings,  screen,  ship, invaders, bullets):
         bullet.draw_bullet()
     ship.blitme()
     invaders.draw(screen)
+    
+    if not stats.game_active:
+        play_button.draw_button()
     
     pygame.display.flip()
 
@@ -109,14 +121,16 @@ def get_number_rows(ai_settings,  ship_height,  invader_height):
     number_rows = int( available_space_y / (2 * invader_height) )
     return number_rows
 
-def update_invaders(ai_settings,  ship,  invaders):
+def update_invaders(ai_settings,  stats,  screen,  ship,  invaders,  bullets):
     """Update the positions of all invaders"""
     check_fleet_edges(ai_settings=ai_settings,  invaders=invaders)
     invaders.update()
     
     # check for collisions with the ship
     if pygame.sprite.spritecollideany(ship,  invaders):
-        print("Invaders hit the ship. You lose!")
+        ship_hit(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
+    
+    check_invaders_bottom(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
 
 def check_fleet_edges(ai_settings,  invaders):
     """check all invaders if there are on the edge"""
@@ -130,3 +144,26 @@ def change_fleet_direction(ai_settings,  invaders):
     for invader in invaders.sprites():
         invader.rect.y += ai_settings.fleet_drop_speed
     ai_settings.fleet_direction *= -1
+
+def ship_hit(ai_settings,  stats,  screen,  ship,  invaders,  bullets):
+    """ship was hit"""
+    if stats.ship_left > 0:
+        stats.ship_left -= 1
+    else:
+        stats.game_active = False
+    
+    invaders.empty()
+    bullets.empty()
+    
+    create_fleet(ai_settings=ai_settings,  screen=screen,  ship=ship,  invaders=invaders)
+    ship.center_ship()
+    
+    sleep(ai_settings.sleep_second)
+
+def check_invaders_bottom(ai_settings,  stats,  screen, ship,  invaders,  bullets):
+    """Check if any invaders have reached the bottom"""
+    screen_rect = screen.get_rect()
+    for invader in invaders.sprites():
+        if invader.rect.bottom >= screen_rect.bottom:
+            ship_hit(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
+            break
