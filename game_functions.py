@@ -63,7 +63,7 @@ def check_play_button(ai_settings,  screen,  stats,  play_button,  ship,  invade
                 invaders=invaders)
         ship.center_ship()
 
-def update_screen(ai_settings,  screen,  stats,  ship, invaders, bullets,  play_button):
+def update_screen(ai_settings,  screen,  stats,  scoreboard, ship, invaders, bullets,  play_button):
     """
     Update images on the screen and flip to the new screen
     """
@@ -73,13 +73,14 @@ def update_screen(ai_settings,  screen,  stats,  ship, invaders, bullets,  play_
         bullet.draw_bullet()
     ship.blitme()
     invaders.draw(screen)
+    scoreboard.show_score()
     
     if not stats.game_active:
         play_button.draw_button()
     
     pygame.display.flip()
 
-def update_bullets(ai_settings,  screen,  ship,  invaders,  bullets):
+def update_bullets(ai_settings,  screen, stats, scoreboard, ship,  invaders,  bullets):
     """Update position of bullets and delete the old"""
     bullets.update()
     
@@ -89,11 +90,16 @@ def update_bullets(ai_settings,  screen,  ship,  invaders,  bullets):
             bullets.remove(bullet)
     
     # check for shot
-    check_bullet_invader_collisions(ai_settings=ai_settings,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
+    check_bullet_invader_collisions(ai_settings=ai_settings,  screen=screen,  stats=stats, 
+                        scoreboard=scoreboard,  ship=ship,  invaders=invaders,  bullets=bullets)
 
-def check_bullet_invader_collisions(ai_settings,  screen,  ship,  invaders,  bullets):
+def check_bullet_invader_collisions(ai_settings,  screen,  stats, scoreboard, ship,  invaders,  bullets):
     """check if bullet shot the invader"""
     collisions = pygame.sprite.groupcollide(bullets,  invaders,  True,  True)
+    if collisions:
+        for invader in collisions.values():
+            stats.score += ai_settings.invader_points * len(invader)
+            scoreboard.prep_score()
     if len(invaders) == 0:
         bullets.empty()
         ai_settings.increase_speed()

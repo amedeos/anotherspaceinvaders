@@ -4,6 +4,7 @@ from pygame.sprite import Group
 
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from ship import Ship
 from button import Button
 import game_functions as gf
@@ -21,6 +22,7 @@ def run_game():
     
     # game statistics
     stats = GameStats(ai_settings=ai_settings)
+    sb = Scoreboard(ai_settings=ai_settings,  screen=screen,  stats=stats)
     
     # make the guardian of the invaders
     ship = Ship(ai_settings=ai_settings,  screen=screen)
@@ -40,10 +42,12 @@ def run_game():
         
         if stats.game_active:
             ship.update()
-            gf.update_bullets(ai_settings=ai_settings,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
-            gf.update_invaders(ai_settings=ai_settings, stats=stats, screen=screen,  ship=ship, invaders=invaders,  bullets=bullets)
+            gf.update_bullets(ai_settings=ai_settings,  screen=screen, stats=stats, 
+                    scoreboard=sb, ship=ship,  invaders=invaders,  bullets=bullets)
+            gf.update_invaders(ai_settings=ai_settings, stats=stats, screen=screen,  
+                    ship=ship, invaders=invaders,  bullets=bullets)
         
-        gf.update_screen(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship, 
-                    invaders=invaders,  bullets=bullets,  play_button=play_button)
+        gf.update_screen(ai_settings=ai_settings,  stats=stats, scoreboard=sb,  screen=screen,  
+                    ship=ship, invaders=invaders,  bullets=bullets,  play_button=play_button)
 
 run_game()
