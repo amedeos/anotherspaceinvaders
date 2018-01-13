@@ -31,7 +31,7 @@ def check_keyup_events(event,  ship):
         # stop moving to the left
         ship.moving_left = False
 
-def check_events(ai_settings,  screen, stats,  play_button,  ship, invaders,  bullets):
+def check_events(ai_settings,  screen, stats, scoreboard, play_button,  ship, invaders,  bullets):
     """Respond to keyboard and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -43,10 +43,11 @@ def check_events(ai_settings,  screen, stats,  play_button,  ship, invaders,  bu
             check_keyup_events(event,  ship)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x,  mouse_y = pygame.mouse.get_pos()
-            check_play_button(ai_settings=ai_settings,  screen=screen,  stats=stats,  play_button=play_button,  
-                    ship=ship,  invaders=invaders,  bullets=bullets,  mouse_x=mouse_x,  mouse_y=mouse_y)
+            check_play_button(ai_settings=ai_settings,  screen=screen,  stats=stats, scoreboard=scoreboard, 
+                    play_button=play_button, ship=ship, invaders=invaders, bullets=bullets, 
+                    mouse_x=mouse_x,  mouse_y=mouse_y)
 
-def check_play_button(ai_settings,  screen,  stats,  play_button,  ship,  invaders,  
+def check_play_button(ai_settings,  screen,  stats, scoreboard,  play_button,  ship,  invaders,  
                 bullets,  mouse_x,  mouse_y):
     """Start a new game"""
     button_clicked = play_button.rect.collidepoint(mouse_x,  mouse_y)
@@ -55,6 +56,10 @@ def check_play_button(ai_settings,  screen,  stats,  play_button,  ship,  invade
         pygame.mouse.set_visible(False)
         stats.reset_stats()
         stats.game_active = True
+        
+        scoreboard.prep_score()
+        scoreboard.prep_high_score()
+        scoreboard.prep_level()
         
         invaders.empty()
         bullets.empty()
@@ -100,9 +105,12 @@ def check_bullet_invader_collisions(ai_settings,  screen,  stats, scoreboard, sh
         for invader in collisions.values():
             stats.score += ai_settings.invader_points * len(invader)
             scoreboard.prep_score()
+        check_high_score(stats,  scoreboard)
     if len(invaders) == 0:
         bullets.empty()
         ai_settings.increase_speed()
+        stats.level += 1
+        scoreboard.prep_level()
         create_fleet(ai_settings=ai_settings,  screen=screen,  ship=ship,  invaders=invaders)
 
 def fire_bullet(ai_settings,  screen,  ship,  bullets):
@@ -189,3 +197,9 @@ def check_invaders_bottom(ai_settings,  stats,  screen, ship,  invaders,  bullet
         if invader.rect.bottom >= screen_rect.bottom:
             ship_hit(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
             break
+
+def check_high_score(stats,  scoreboard):
+    """Check if the score is major than high score"""
+    if stats.score > stats.high_score:
+        stats.high_score = stats.score
+        scoreboard.prep_high_score()
