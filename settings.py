@@ -13,7 +13,7 @@ class Settings():
         #kept from https://pixabay.com/it/razzo-vettoriale-spazio-lancio-2442125/
         #self.ship_image = 'images/rocket.bmp'
         self.ship_image = 'images/ship-invaders-2.bmp'
-        self.ship_limit = 1
+        self.ship_limit = 5
         # bullet settings
         self.bullet_width = 3
         self.bullet_height = 15
@@ -27,8 +27,8 @@ class Settings():
         self.score_scale = 1.5
         self.invader_points = 50
         # score settins
-        self.score_right = 20
-        self.score_top = 20
+        self.score_right = 10
+        self.score_top = 10
         
         self.sleep_second = 1
         

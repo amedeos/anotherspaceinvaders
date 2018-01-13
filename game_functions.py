@@ -60,6 +60,7 @@ def check_play_button(ai_settings,  screen,  stats, scoreboard,  play_button,  s
         scoreboard.prep_score()
         scoreboard.prep_high_score()
         scoreboard.prep_level()
+        scoreboard.prep_ships()
         
         invaders.empty()
         bullets.empty()
@@ -150,16 +151,18 @@ def get_number_rows(ai_settings,  ship_height,  invader_height):
     number_rows = int( available_space_y / (2 * invader_height) )
     return number_rows
 
-def update_invaders(ai_settings,  stats,  screen,  ship,  invaders,  bullets):
+def update_invaders(ai_settings,  stats,  screen, scoreboard, ship,  invaders,  bullets):
     """Update the positions of all invaders"""
     check_fleet_edges(ai_settings=ai_settings,  invaders=invaders)
     invaders.update()
     
     # check for collisions with the ship
     if pygame.sprite.spritecollideany(ship,  invaders):
-        ship_hit(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
+        ship_hit(ai_settings=ai_settings,  stats=stats, scoreboard=scoreboard, screen=screen,
+                    ship=ship,  invaders=invaders,  bullets=bullets)
     
-    check_invaders_bottom(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
+    check_invaders_bottom(ai_settings=ai_settings,  stats=stats,  scoreboard=scoreboard,
+                screen=screen,  ship=ship, invaders=invaders,  bullets=bullets)
 
 def check_fleet_edges(ai_settings,  invaders):
     """check all invaders if there are on the edge"""
@@ -174,13 +177,15 @@ def change_fleet_direction(ai_settings,  invaders):
         invader.rect.y += ai_settings.fleet_drop_speed
     ai_settings.fleet_direction *= -1
 
-def ship_hit(ai_settings,  stats,  screen,  ship,  invaders,  bullets):
+def ship_hit(ai_settings, stats, scoreboard, screen,  ship, invaders,  bullets):
     """ship was hit"""
     if stats.ship_left > 0:
         stats.ship_left -= 1
     else:
         stats.game_active = False
         pygame.mouse.set_visible(True)
+    
+    scoreboard.prep_ships()
     
     invaders.empty()
     bullets.empty()
@@ -190,12 +195,13 @@ def ship_hit(ai_settings,  stats,  screen,  ship,  invaders,  bullets):
     
     sleep(ai_settings.sleep_second)
 
-def check_invaders_bottom(ai_settings,  stats,  screen, ship,  invaders,  bullets):
+def check_invaders_bottom(ai_settings,  stats, scoreboard, screen, ship,  invaders,  bullets):
     """Check if any invaders have reached the bottom"""
     screen_rect = screen.get_rect()
     for invader in invaders.sprites():
         if invader.rect.bottom >= screen_rect.bottom:
-            ship_hit(ai_settings=ai_settings,  stats=stats,  screen=screen,  ship=ship,  invaders=invaders,  bullets=bullets)
+            ship_hit(ai_settings=ai_settings,  stats=stats, scoreboard=scoreboard, screen=screen,
+                        ship=ship, invaders=invaders, bullets=bullets)
             break
 
 def check_high_score(stats,  scoreboard):

@@ -44,8 +44,8 @@ def run_game():
             ship.update()
             gf.update_bullets(ai_settings=ai_settings,  screen=screen, stats=stats, 
                     scoreboard=sb, ship=ship,  invaders=invaders,  bullets=bullets)
-            gf.update_invaders(ai_settings=ai_settings, stats=stats, screen=screen,  
-                    ship=ship, invaders=invaders,  bullets=bullets)
+            gf.update_invaders(ai_settings=ai_settings, stats=stats, scoreboard=sb,
+                    screen=screen, ship=ship, invaders=invaders,  bullets=bullets)
         
         gf.update_screen(ai_settings=ai_settings,  stats=stats, scoreboard=sb,  screen=screen,  
                     ship=ship, invaders=invaders,  bullets=bullets,  play_button=play_button)
