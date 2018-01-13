@@ -51,6 +51,7 @@ def check_play_button(ai_settings,  screen,  stats,  play_button,  ship,  invade
     """Start a new game"""
     button_clicked = play_button.rect.collidepoint(mouse_x,  mouse_y)
     if button_clicked and not stats.game_active:
+        ai_settings.initialize_dynamic_settings()
         pygame.mouse.set_visible(False)
         stats.reset_stats()
         stats.game_active = True
@@ -95,6 +96,7 @@ def check_bullet_invader_collisions(ai_settings,  screen,  ship,  invaders,  bul
     collisions = pygame.sprite.groupcollide(bullets,  invaders,  True,  True)
     if len(invaders) == 0:
         bullets.empty()
+        ai_settings.increase_speed()
         create_fleet(ai_settings=ai_settings,  screen=screen,  ship=ship,  invaders=invaders)
 
 def fire_bullet(ai_settings,  screen,  ship,  bullets):
